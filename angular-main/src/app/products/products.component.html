@@ -1,0 +1,106 @@
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>image</th>
+      <th>price</th>
+      <th>category id</th>
+      <th>quantity</th>
+      <th>count</th>
+      <th></th>
+      <th></th> <!--details-->
+      <th></th> <!--edit-->
+      <th></th> <!--delete-->
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let item of allProd">
+      <tr *ngIf="item.quantity != 0" class="col-2"
+      [ngStyle]="{'background-color': item.quantity ==1 ? 'yellow': 'white'}" >
+        <td>{{item.name}}</td>
+        <td><img appProductCardDir  [src]="item.img"></td>
+        <td>{{item.price}}</td>
+        <td>{{item.catID}}</td>
+        <td>
+
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <button class="btn btn-outline-secondary"
+              type="button" (click)="decreaseQNT(item)">
+                -</button>
+            </div>
+            <div class="mx-3">{{item.quantity}}</div>
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary"
+              type="button" (click)="increaseQNT(item)">
+                +</button>
+            </div>
+          </div>
+        </td>
+
+        <td>
+          <input type="number" #refCount placeholder="count?"
+          class="form-control w-50" min={{1}} max={{item.quantity}}>
+          <!-- [ngStyle]="{'background-color': (+refCount.value)>(item.quantity) ? 'red' : 'white'}"> -->
+        </td>
+        <td>
+          <button class="btn btn-secondary"
+              type="button"
+              (click)="sendToCart({productName: item.name,
+                unitPrice: item.price,selectedQuantity: +[refCount.value]})">
+                Add to Cart</button>
+        </td>
+        <td>
+          <button class="btn btn-secondary" type="button">
+            <a routerLink="/products/{{item.id}}"> Details</a>
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-success" type="button">
+            <a routerLink="/editProd/{{item.id}}"> Edit</a>
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-danger" type="button"
+          (click) ="setId(item.id)"
+          data-bs-toggle="modal" data-bs-target="#exampleModal2">
+            Delete
+          </button>
+        </td>
+        <input hidden #refid [value]="item.id" />
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
+
+
+<div class="row" *ngIf="adsExist">
+  <div class="border col-2">
+    <h1 class="text-danger">Sales</h1>
+    <hr>
+    <p>{{currentAds}}</p>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal2"
+tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure to Delete this Product?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"
+        data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary"
+        (click)="DeleteProduct(currentId)" data-bs-dismiss="modal">confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
